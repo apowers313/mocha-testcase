@@ -102,7 +102,7 @@ class TestCase {
      * run the test function with the top-level properties of the test object applied as arguments
      */
     doIt() {
-        return new Promise (function (resolve) {
+        return new Promise ((resolve) => {
             resolve (this.testFunction.call(this.ctx, ...this.toArgs()));
         });
     }
@@ -112,15 +112,15 @@ class TestCase {
      *
      * run the test function with the top-level properties of the test object applied as arguments, and validate the results
      */
-    test(testDesc) {
-        this.it(testDesc, function() {
+    test(testDesc="untitled test") {
+        this.it(testDesc, () => {
             return this.doIt()
                 // .then(() => {
                 //     return new ScopedCredentialInfo().init();
                 // })
                 .then((ret) => {
                     // check the result
-                    return this.assert (this.validateRet(ret));
+                    this.assert (this.validateRet(ret), "return value");
                 });
         });
     }
@@ -134,20 +134,21 @@ class TestCase {
      *
      * calls doIt() with testObject() and expects it to fail with a TypeError()
      */
-    testBadArgs(testDesc) {
-        this.it(testDesc, function(done) {
+    testBadArgs(testDesc="untitled test") {
+        this.it(testDesc, () => {
             this.doIt().then(function() {
                 this.assert(false, "should fail due to bad arguments");
                 done();
             })
             .catch(function(err) {
-                if (err instanceof new TypeError()) {
-                    done(); // pass
-                } else {
+                if (!(err instanceof TypeError)) {
                     this.assert (false, "expected TypeError:", err);
-                    done();
                 }
             });
         });
     }
+}
+
+if (module) {
+    module.exports = TestCase;
 }
