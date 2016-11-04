@@ -1,10 +1,10 @@
 {
   "name": "mocha-testcase",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A test case generator / helper class for Mocha tests",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/apowers313/mocha-testcase/issues"
   },
-  "homepage": "https://github.com/apowers313/mocha-testcase#readme"
+  "homepage": "https://github.com/apowers313/mocha-testcase#readme",
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
 }
