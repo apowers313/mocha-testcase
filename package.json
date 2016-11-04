@@ -1,0 +1,26 @@
+{
+  "name": "mocha-testcase",
+  "version": "0.7.0",
+  "description": "A test case generator / helper class for Mocha tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apowers313/mocha-testcase.git"
+  },
+  "keywords": [
+    "mocha",
+    "test",
+    "fuzzing",
+    "helper",
+    "testcase"
+  ],
+  "author": "Adam Powers <apowers@ato.ms>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apowers313/mocha-testcase/issues"
+  },
+  "homepage": "https://github.com/apowers313/mocha-testcase#readme"
+}
