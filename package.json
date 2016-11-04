@@ -1,6 +1,6 @@
 {
   "name": "mocha-testcase",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A test case generator / helper class for Mocha tests",
   "main": "index.js",
   "scripts": {
