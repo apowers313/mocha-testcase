@@ -10,7 +10,7 @@ node.js:
 
 browser:
 ``` html
-<script type="text/javascript" src="https://github.com/apowers313/mocha-testcase/mocha-testcase.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/apowers313/mocha-testcase/master/mocha-testcase.js"></script>
 ```
 
 ## TestCase Configuration
