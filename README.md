@@ -6,17 +6,70 @@ Note that this library assumes the use of JavaScript ES2015 (aka - ES6).
 ## Installing
 
 node.js:
-`npm install mocha-testcase`
+```
+npm install mocha-testcase
+```
 
 browser:
 ``` html
 <script type="text/javascript" src="https://cdn.rawgit.com/apowers313/mocha-testcase/master/mocha-testcase.js"></script>
 ```
 
-## TestCase Configuration
-The TestCase constructor (called via `super()` -- see examples below) requires two arguments: `assert` and `test`. Assert can be any assert function that takes the arguments `bool` (`true` for passing assertion, `false` for failing assertion); and `message`. Test is a mocha function, such as `it` that takes two arguments: `test description` and `function` where function runs the test.
+## Example: Defining Your Test
 
-The following are the properties of the TestClass class that your class will need to override (see the example below).
+Below is an example of defining a test class for the [browser's IndexedDB interface](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API), specifically the `open` method of that interface:
+
+``` javascript
+class IndexedDbOpenTest extends TestCase {
+    constructor() {
+        // call the TestCase constructor
+        // note that the TestCase constructor requires the assert and test functions to be used
+        super(assert, it);
+
+        // the function to be tested
+        this.testFunction = window.indexedDB.open;
+
+        // the default arguments for the function
+        this.testObject = {name: "testdb", version: "1"};
+
+        // the order of the arguments for the test function
+        this.argOrder = ["name", "version"];
+
+        // the context to use for the test function
+        this.ctx = window.indexedDB;
+
+        // enable the constructor to modify the default testObject
+        if (arguments.length) this.modify(...arguments);
+    }
+}
+```
+
+## Example: Using Your Test
+
+``` javascript
+// passes with default arguments
+new IndexedDbOpenTest().test();
+
+// constructor modifies default arguments so that "name" is null, and version is still 1
+// test passes since `window.indexedDB.open()` will throw a `TypeError`
+new IndexedDbOpenTest("name", null).testBadArgs("Database open: name cannot be null");
+
+// constructor modifies default arguments so that "name" is still "testdb", and version is 0
+// test passes since `window.indexedDB.open()` will throw a `TypeError`
+new IndexedDbOpenTest("version", 0).testBadArgs("Database open: version cannot be zero");
+
+// delete all default args to pass no arguments
+// test passes since `window.indexedDB.open()` will throw a `TypeError`
+new IndexedDbOpenTest({[
+        {path: "name", value: undefined},
+        {path: "version", value: undefined}
+        ]}).testBadArgs("Database open: requires at least one argument");
+```
+
+## TestCase Configuration
+The TestCase constructor (called via `super()` -- see examples above) requires two arguments: `assert` and `test`. Assert can be any assert function that takes the arguments `bool` (`true` for passing assertion, `false` for failing assertion); and `message`. Test is a mocha function, such as `it` that takes two arguments: `test description` and `function` where function runs the test.
+
+The following are the properties of the TestClass class that your class will need to override (see the example above).
 
 ### testFunction
 The function that will be tested.
@@ -75,7 +128,7 @@ The `testObject` that will be used as the argument to `testFunction` can be modi
 Passing arguments to the constructor is the same as passing arguments to modify. Modify is similar to lodash's set() method, and will create properties if they do not already exist.
 
 ``` javascript
-// testObject defined in the constructor (see below)
+// testObject defined in the constructor (see examples above)
 testObject = { name: "Adam",
                address: {
                    street: "123 Main St",
@@ -121,54 +174,3 @@ modify ([{path: "path.to.property", value: value}
         ])
 ```
 Especially useful for modifying lots of default values.
-
-## Example: Defining Your Test
-
-Below is an example of defining a test class for the [browser's IndexedDB interface](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API), specifically the `open` method of that interface:
-
-``` javascript
-class IndexedDbOpenTest extends TestCase {
-    constructor() {
-        // call the TestCase constructor
-        // note that the TestCase constructor requires the assert and test functions to be used
-        super(assert, it);
-
-        // the function to be tested
-        this.testFunction = window.indexedDB.open;
-
-        // the default arguments for the function
-        this.testObject = {name: "testdb", version: "1"};
-
-        // the order of the arguments for the test function
-        this.argOrder = ["name", "version"];
-
-        // the context to use for the test function
-        this.ctx = window.indexedDB;
-
-        // enable the constructor to modify the default testObject
-        if (arguments.length) this.modify(...arguments);
-    }
-}
-```
-
-## Example: Using Your Test
-
-``` javascript
-// passes with default arguments
-new IndexedDbOpenTest().test();
-
-// constructor modifies default arguments so that "name" is null, and version is still 1
-// test passes since `window.indexedDB.open()` will throw a `TypeError`
-new IndexedDbOpenTest("name", null).testBadArgs("Database open: name cannot be null");
-
-// constructor modifies default arguments so that "name" is still "testdb", and version is 0
-// test passes since `window.indexedDB.open()` will throw a `TypeError`
-new IndexedDbOpenTest("version", 0).testBadArgs("Database open: version cannot be zero");
-
-// delete all default args to pass no arguments
-// test passes since `window.indexedDB.open()` will throw a `TypeError`
-new IndexedDbOpenTest({[
-        {path: "name", value: undefined},
-        {path: "version", value: undefined}
-        ]}).testBadArgs("Database open: requires at least one argument");
-```
