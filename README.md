@@ -14,6 +14,8 @@ browser:
 ```
 
 ## TestCase Configuration
+The TestCase constructor (called via `super()` -- see examples below) requires two arguments: `assert` and `test`. Assert can be any assert function that takes the arguments `bool` (`true` for passing assertion, `false` for failing assertion); and `message`. Test is a mocha function, such as `it` that takes two arguments: `test description` and `function` where function runs the test.
+
 The following are the properties of the TestClass class that your class will need to override (see the example below).
 
 ### testFunction
@@ -41,6 +43,9 @@ argOrder = {
     "arg3"
 };
 ```
+
+### validateRet
+A function to validate the return value of `testFunction`. Returns `true` if validation passes, and `false` if validation fails.
 
 ### ctx
 When calling `testFunction`, `ctx` will be the `this` object.
@@ -125,7 +130,8 @@ Below is an example of defining a test class for the [browser's IndexedDB interf
 class IndexedDbOpenTest extends TestCase {
     constructor() {
         // call the TestCase constructor
-        super();
+        // note that the TestCase constructor requires the assert and test functions to be used
+        super(assert, it);
 
         // the function to be tested
         this.testFunction = window.indexedDB.open;
